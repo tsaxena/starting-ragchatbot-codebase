@@ -1,9 +1,9 @@
 import chromadb
 from chromadb.config import Settings
+from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 from models import Course, CourseChunk
-from sentence_transformers import SentenceTransformer
 
 @dataclass
 class SearchResults:
@@ -42,10 +42,8 @@ class VectorStore:
             settings=Settings(anonymized_telemetry=False)
         )
         
-        # Set up sentence transformer embedding function
-        self.embedding_function = chromadb.utils.embedding_functions.SentenceTransformerEmbeddingFunction(
-            model_name=embedding_model
-        )
+        # Set up ONNX-based embedding function (no PyTorch needed)
+        self.embedding_function = DefaultEmbeddingFunction()
         
         # Create collections for different types of data
         self.course_catalog = self._create_collection("course_catalog")  # Course titles/instructors
