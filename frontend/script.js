@@ -19,6 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     createNewSession();
     loadCourseStats();
+
+    document.getElementById('newChatBtn').addEventListener('click', async () => {
+        if (currentSessionId) {
+            try {
+                await fetch(`${API_URL}/sessions/${currentSessionId}`, { method: 'DELETE' });
+            } catch (e) {
+                // best-effort cleanup — proceed regardless
+            }
+        }
+        createNewSession();
+    });
 });
 
 // Event Listeners
